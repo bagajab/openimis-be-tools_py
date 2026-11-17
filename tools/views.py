@@ -585,13 +585,9 @@ def process_export_items(user, data_type):
     item_resource = ItemResource(user=user)
     query_set = Item.objects.filter(*Item.filter_validity()).order_by("code")
     dataset = item_resource.export(query_set)
-    datasets = {
-        XLS: dataset.xls,
-        CSV: dataset.csv,
-        JSON: dataset.json,
-        XLSX: dataset.xlsx,
-    }
-    response = HttpResponse(datasets[data_type], content_type=CONTENT_TYPES[data_type])
+    # Render only the requested format: each tablib format may need its own
+    # optional backend (xlwt, openpyxl), which must not break the others.
+    response = HttpResponse(dataset.export(data_type), content_type=CONTENT_TYPES[data_type])
     response['Content-Disposition'] = f'attachment; filename="items.{data_type}"'
     return response
 
@@ -643,13 +639,9 @@ def process_export_services(user, data_type):
     service_resource = ServiceResource(user)
     query_set = Service.objects.filter(*Service.filter_validity()).order_by("code")
     dataset = service_resource.export(query_set)
-    datasets = {
-        XLS: dataset.xls,
-        CSV: dataset.csv,
-        JSON: dataset.json,
-        XLSX: dataset.xlsx,
-    }
-    response = HttpResponse(datasets[data_type], content_type=CONTENT_TYPES[data_type])
+    # Render only the requested format: each tablib format may need its own
+    # optional backend (xlwt, openpyxl), which must not break the others.
+    response = HttpResponse(dataset.export(data_type), content_type=CONTENT_TYPES[data_type])
     response['Content-Disposition'] = f'attachment; filename="services.{data_type}"'
     return response
 

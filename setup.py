@@ -27,7 +27,8 @@ setup(
         "pyminizip",
         "pyzipper",
         "defusedxml",
-        "tablib",
+        # xls and xlsx exports need the optional backends (xlwt, openpyxl)
+        "tablib[xls,xlsx]",
         "django-import-export",
     ],
     classifiers=[
